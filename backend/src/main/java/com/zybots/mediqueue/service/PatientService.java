@@ -4,7 +4,6 @@ import com.zybots.mediqueue.model.Patient;
 import com.zybots.mediqueue.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,3 +25,5 @@ public class PatientService {
         return patientRepository.findById(id);
     }
 }
+
+
