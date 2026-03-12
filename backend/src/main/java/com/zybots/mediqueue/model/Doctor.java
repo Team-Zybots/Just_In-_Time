@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 public class Doctor extends User {
 
     private String specialization;
-   
+    
     @Column(name = "base_consultation_duration")
-    private Integer baseConsultationDuration = 10;
+    private Integer baseConsultationDuration = 10; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "current_status")
