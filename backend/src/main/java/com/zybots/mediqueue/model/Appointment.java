@@ -2,7 +2,7 @@ package com.zybots.mediqueue.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-//testing gitub switching
+
 
 @Entity
 @Table(name = "appointments")

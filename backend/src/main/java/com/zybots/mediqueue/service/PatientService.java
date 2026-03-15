@@ -25,5 +25,3 @@ public class PatientService {
         return patientRepository.findById(id);
     }
 }
-
-
