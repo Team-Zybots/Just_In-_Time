@@ -13,8 +13,9 @@ import 'doctor_screen.dart';
 // --- FEATURE & SUB-PAGES ---
 import 'navigation_screen.dart';
 import 'clinic_screen.dart';
-import 'notification_screen.dart'; // The list of notifications
-import 'notification_settings_page.dart'; // The toggle switches screen
+import 'notification_screen.dart';
+import 'notification_settings_page.dart';
+import 'book_new_appt.dart'; // ADDED
 
 // --- USER & LEGAL ---
 import 'settings_page.dart';
@@ -54,12 +55,13 @@ class JustInTimeApp extends StatelessWidget {
         '/otp': (context) => const OtpPage(),
         '/main': (context) => const MainNavigation(),
         '/notifications': (context) => const NotificationScreen(),
-        '/notification_settings': (context) => const NotificationSettingsPage(), // ADDED
+        '/notification_settings': (context) => const NotificationSettingsPage(),
         '/profile': (context) => const ProfilePage(),
         '/edit_profile': (context) => const EditProfilePage(),
         '/settings': (context) => const SettingsPage(),
         '/privacy': (context) => const PrivacyPolicyPage(),
         '/help': (context) => const HelpSupportPage(),
+        '/book_appt': (context) => const BookAppointmentPage(), // ADDED
       },
     );
   }
@@ -97,7 +99,6 @@ class _MainNavigationState extends State<MainNavigation> {
       child: Scaffold(
         body: _pages[_currentIndex], 
         bottomNavigationBar: BottomNavigationBar(
-          // Keeps "Home" highlighted if we are in Navigation or Clinic info
           currentIndex: _currentIndex > 3 ? 0 : _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
