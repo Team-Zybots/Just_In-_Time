@@ -10,6 +10,7 @@ import 'appts_screen.dart';
 import 'doctor_screen.dart';
 import 'navigation_screen.dart';
 import 'clinic_screen.dart';
+import 'book_appointment_page.dart';
 
 void main() => runApp(const JustInTimeApp());
 
@@ -28,6 +29,7 @@ class JustInTimeApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/otp': (context) => const OtpPage(),
         '/main': (context) => const MainNavigation(),
+        '/book_appt': (context) => const BookAppointmentPage(),
       },
     );
   }
