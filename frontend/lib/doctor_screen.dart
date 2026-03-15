@@ -5,26 +5,14 @@ class DoctorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
-      // Bottom Navigation matches the screenshot's footer
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 3, 
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Queue'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today_outlined), label: 'Appts'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Doctor'),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _header(),
-            Padding(
+    
+    return Container(
+      color: const Color(0xFFF8F9FB),
+      child: Column(
+        children: [
+          _header(context),
+          Expanded(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
@@ -35,20 +23,24 @@ class DoctorScreen extends StatelessWidget {
                   _queueHistoryCard(),
                   const SizedBox(height: 16),
                   _performanceCard(),
+                  const SizedBox(height: 30), // Extra space so nothing gets cut off
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   // --- UI Components ---
 
-  Widget _header() {
+  Widget _header(BuildContext context) {
+    // Dynamic top padding to handle status bar/notch
+    final double topPadding = MediaQuery.of(context).padding.top;
+    
     return Container(
-      padding: const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 30),
+      padding: EdgeInsets.only(top: topPadding + 10, left: 20, right: 20, bottom: 25),
       color: const Color(0xFF53C8D8),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,6 +59,31 @@ class DoctorScreen extends StatelessWidget {
               Icon(Icons.menu, color: Colors.white),
             ],
           )
+        ],
+      ),
+    );
+  }
+
+
+ 
+  
+  Widget _cardWrapper({String? title, IconData? icon, required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null) ...[
+            Row(children: [
+              if (icon != null) Icon(icon, size: 16, color: Colors.cyan),
+              if (icon != null) const SizedBox(width: 5),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ]),
+            const SizedBox(height: 15),
+          ],
+          child,
         ],
       ),
     );
@@ -112,70 +129,6 @@ class DoctorScreen extends StatelessWidget {
     );
   }
 
-  Widget _availabilityCard() {
-    return _cardWrapper(
-      title: 'Current Availability',
-      child: Column(
-        children: [
-          _statusTile('Active', Colors.green, true),
-          _statusTile('On Break', Colors.orange, false),
-          _statusTile('Emergency/Away', Colors.amber, false),
-        ],
-      ),
-    );
-  }
-
-  Widget _queueHistoryCard() {
-    return _cardWrapper(
-      title: 'Session Queue History',
-      icon: Icons.history,
-      child: Column(
-        children: [
-          _dataRow('Total Tokens Today', '25', const Color(0xFFE1F5FE), Colors.black),
-          _dataRow('Completed', '15', const Color(0xFFE8F5E9), Colors.green),
-          _dataRow('Remaining', '10', const Color(0xFFFFF8E1), Colors.orange),
-        ],
-      ),
-    );
-  }
-
-  Widget _performanceCard() {
-    return _cardWrapper(
-      title: "Today's Performance",
-      child: Column(
-        children: [
-          _progressRow('Avg. Time per Patient', '9 min', 0.6),
-          _progressRow('Queue Efficiency', '90%', 0.9),
-          _progressRow('On-Time Rate', '85%', 0.85),
-        ],
-      ),
-    );
-  }
-
-  // --- Helper Widgets ---
-
-  Widget _cardWrapper({String? title, IconData? icon, required Widget child}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (title != null) ...[
-            Row(children: [
-              if (icon != null) Icon(icon, size: 16, color: Colors.cyan),
-              if (icon != null) const SizedBox(width: 5),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            ]),
-            const SizedBox(height: 15),
-          ],
-          child,
-        ],
-      ),
-    );
-  }
-
   Widget _statBox(String label, String value) {
     return Expanded(
       child: Container(
@@ -187,6 +140,19 @@ class DoctorScreen extends StatelessWidget {
             Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _availabilityCard() {
+    return _cardWrapper(
+      title: 'Current Availability',
+      child: Column(
+        children: [
+          _statusTile('Active', Colors.green, true),
+          _statusTile('On Break', Colors.orange, false),
+          _statusTile('Emergency/Away', Colors.amber, false),
+        ],
       ),
     );
   }
@@ -212,6 +178,20 @@ class DoctorScreen extends StatelessWidget {
     );
   }
 
+  Widget _queueHistoryCard() {
+    return _cardWrapper(
+      title: 'Session Queue History',
+      icon: Icons.history,
+      child: Column(
+        children: [
+          _dataRow('Total Tokens Today', '25', const Color(0xFFE1F5FE), Colors.black),
+          _dataRow('Completed', '15', const Color(0xFFE8F5E9), Colors.green),
+          _dataRow('Remaining', '10', const Color(0xFFFFF8E1), Colors.orange),
+        ],
+      ),
+    );
+  }
+
   Widget _dataRow(String label, String value, Color bg, Color textCol) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -222,6 +202,19 @@ class DoctorScreen extends StatelessWidget {
         children: [
           Text(label, style: const TextStyle(fontSize: 13)),
           Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: textCol)),
+        ],
+      ),
+    );
+  }
+
+  Widget _performanceCard() {
+    return _cardWrapper(
+      title: "Today's Performance",
+      child: Column(
+        children: [
+          _progressRow('Avg. Time per Patient', '9 min', 0.6),
+          _progressRow('Queue Efficiency', '90%', 0.9),
+          _progressRow('On-Time Rate', '85%', 0.85),
         ],
       ),
     );
