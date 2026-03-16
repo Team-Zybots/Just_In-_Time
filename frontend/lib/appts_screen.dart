@@ -16,60 +16,73 @@ class ApptsScreen extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(), // Essential for Chrome emulator
             padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Upcoming Appointments",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                
-                // --- APPOINTMENT LIST ---
-                const AppointmentCard(
-                  name: "Dr. Wijesekara",
-                  type: "Cardiology Checkup",
-                  date: "Mar 20, 2026",
-                  time: "10:30 AM",
-                  status: "Today",
-                  isHighlighted: true,
-                ),
-                const AppointmentCard(
-                  name: "Dr. Rathnayake",
-                  type: "General Consultation",
-                  date: "Mar 25, 2026",
-                  time: "02:00 PM",
-                  status: "Upcoming",
-                ),
-                const AppointmentCard(
-                  name: "Dr. Jayaweera",
-                  type: "Eye Examination",
-                  date: "Apr 12, 2026",
-                  time: "11:00 AM",
-                  status: "Upcoming",
-                ),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Upcoming Appointments",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Appointment List
+                  const AppointmentCard(
+                    name: "Dr.Wijesekara",
+                    type: "Cardiology Checkup",
+                    date: "Jan 28, 2026",
+                    time: "10:30 AM",
+                    status: "Today",
+                    isHighlighted: true,
+                  ),
+                  const AppointmentCard(
+                    name: "Dr.Rathnayake",
+                    type: "General Consultation",
+                    date: "Feb 5, 2026",
+                    time: "2:00 PM",
+                    status: "Upcoming",
+                  ),
+                  const AppointmentCard(
+                    name: "Dr.Jayaweera",
+                    type: "Eye Examination",
+                    date: "Feb 12, 2026",
+                    time: "11:00 AM",
+                    status: "Upcoming",
+                  ),
 
                 const SizedBox(height: 25),
 
-                // --- THE BOOKING BUTTON (LINKED) ---
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.add_circle_outline, color: Colors.white),
-                    label: const Text(
-                      "Book New Appointment",
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      // Successfully linked to your new route!
-                      Navigator.pushNamed(context, '/book_appt');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryTeal,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      shadowColor: primaryTeal.withOpacity(0.4),
+                  // Updated Action Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      // --- NAVIGATION LOGIC ADDED HERE ---
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/book_appt');
+                      },
+                      // ------------------------------------
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryTeal,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        "Book New Appointment",
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
