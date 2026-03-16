@@ -4,28 +4,38 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "doctors")
-public class Doctor extends User {
+public class Doctor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
     private String specialization;
-    
-    @Column(name = "base_consultation_duration")
-    private Integer baseConsultationDuration = 10; 
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "current_status")
-    private DoctorStatus currentStatus = DoctorStatus.ACTIVE;
+    private String email;
+    private String phone;
+    private String currentStatus; 
 
     public Doctor() {
-        super();
-        this.setRole(Role.DOCTOR);
     }
+
+    // --- Getters and Setters ---
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getSpecialization() { return specialization; }
     public void setSpecialization(String specialization) { this.specialization = specialization; }
 
-    public Integer getBaseConsultationDuration() { return baseConsultationDuration; }
-    public void setBaseConsultationDuration(Integer baseConsultationDuration) { this.baseConsultationDuration = baseConsultationDuration; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public DoctorStatus getCurrentStatus() { return currentStatus; }
-    public void setCurrentStatus(DoctorStatus currentStatus) { this.currentStatus = currentStatus; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getCurrentStatus() { return currentStatus; }
+    public void setCurrentStatus(String currentStatus) { this.currentStatus = currentStatus; }
 }
