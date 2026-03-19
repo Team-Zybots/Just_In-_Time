@@ -3,7 +3,6 @@ package com.zybots.mediqueue.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "appointments")
 public class Appointment {
