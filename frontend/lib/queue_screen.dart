@@ -74,13 +74,6 @@ class QueueScreen extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            children: [
-              _buildHeaderCircleButton(Icons.notifications_none),
-              const SizedBox(width: 12),
-              _buildHeaderCircleButton(Icons.menu),
-            ],
-          ),
         ],
       ),
     );

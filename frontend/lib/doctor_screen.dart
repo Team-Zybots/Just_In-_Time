@@ -52,13 +52,7 @@ class DoctorScreen extends StatelessWidget {
               Text('Doctor Status', style: TextStyle(color: Colors.white70)),
             ],
           ),
-          Row(
-            children: [
-              Icon(Icons.notifications_none, color: Colors.white),
-              SizedBox(width: 15),
-              Icon(Icons.menu, color: Colors.white),
-            ],
-          )
+          
         ],
       ),
     );
