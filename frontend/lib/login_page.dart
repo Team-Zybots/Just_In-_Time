@@ -17,17 +17,22 @@ class LoginPage extends StatelessWidget {
               style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xFF06B6D4)),
             ),
             const SizedBox(height: 10),
-            const Text("Login to manage your queue", style: TextStyle(color: Colors.grey)),
+          
             const SizedBox(height: 50),
+            
+            // EMAIL TEXT FIELD (Encapsulated Input Object)
             TextField(
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                hintText: "Phone Number",
-                prefixIcon: const Icon(Icons.phone_android, color: Color(0xFF06B6D4)),
+                hintText: "Email Address",
+                prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF06B6D4)),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
             ),
+            
             const SizedBox(height: 25),
+            
+            // ACTION BUTTON (Encapsulated Behavior)
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -37,9 +42,10 @@ class LoginPage extends StatelessWidget {
                   backgroundColor: const Color(0xFF06B6D4),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),
-                child: const Text("Get OTP", style: TextStyle(color: Colors.white, fontSize: 18)),
+                child: const Text("Send OTP to Email", style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
             ),
+            
             const SizedBox(height: 20),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/signup'),
