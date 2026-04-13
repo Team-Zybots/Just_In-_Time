@@ -34,7 +34,7 @@ class HelpSupportPage extends StatelessWidget {
             title: Text("Is the ETA accurate?"),
             children: [Padding(padding: EdgeInsets.all(16), child: Text("ETAs are based on the doctor's average pace and are updated in real-time."))],
           ),
-        ],
+        ], 
       ),
     );
   }
