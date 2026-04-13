@@ -48,8 +48,8 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 ## 🎨 UI Design & Prototype
 
 ### Scrollable UI Screens
-![Home Screen](img width="1000" height="529" alt="SBC-NodeMCU-ESP32-C_01" src="01.png")
-![Details Screen](02.png)
+![Home Screen]<img width="1000" height="529" alt="SBC-NodeMCU-ESP32-C_01" src="01.png">
+![Details Screen]<img width="1000" height="529" alt="SBC-NodeMCU-ESP32-C_01" src="02.png">
 
 
 ### Interactive Prototype
