@@ -1,6 +1,7 @@
 # ⏱️ Just In Time - Real-Time Patient Scheduling & Alerts
 
-> **"Time is the most valuable medicine."** > *Just In Time* is a dynamic healthcare ecosystem that treats a patient's time as a priority. By replacing static, broken appointment slots with a living, breathing queue, our system calculates the exact moment a patient needs to leave their house, ensuring they arrive **Just In Time** for their consultation.
+> **"Time is the most valuable medicine."**
+> *Just In Time* is a dynamic healthcare ecosystem that treats a patient's time as a priority. By replacing static, broken appointment slots with a living, breathing queue, our system calculates the exact moment a patient needs to leave their house, ensuring they arrive **Just In Time** for their consultation.
 
 ---
 
@@ -40,19 +41,23 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
   ├── /hardware       # C++/Arduino code for ESP32 sensors
   ├── /docs           # OOSD reports, UML diagrams, NFR tables
   └── /designs        # UI assets and design exports
+```
+
+---
 
 ## 🎨 UI Design & Prototype
 
 ### Scrollable UI Screens
-![Home Screen](design/week1/home_01.png)
-(designs/week1/home_02.png)
+![Home Screen](designs/week1/home_01.png)
+![Details Screen](designs/week1/home_02.png)
 
 
 ### Interactive Prototype
 [Click here to view the prototype](https://www.figma.com/design/WClz5aN7DWuVeWLIeBFWdM/Medi_Help?node-id=27-341&t=xPMZwsn3gtXQv8y3-1)
 
+---
+
+## 🔌 Hardware Integration (IoT)
 <img width="1000" height="529" alt="SBC-NodeMCU-ESP32-C_01" src="https://github.com/user-attachments/assets/21b9d32d-c84f-43cb-be0e-6bb82acb4d92" />
 
-we are going to integrate an esp32 get some signals to the backend 
-
-
+We are integrating an **ESP32** microcontroller to send real-time room readiness and patient presence signals to the backend system. This ensures the queue is updated the millisecond a consultant is ready for the next patient.
