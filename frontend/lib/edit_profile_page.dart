@@ -91,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          labelText: label,
+          labelText: label, 
           labelStyle: const TextStyle(color: Colors.grey),
           prefixIcon: Icon(icon, color: const Color(0xFF06B6D4)),
           focusedBorder: const UnderlineInputBorder(
