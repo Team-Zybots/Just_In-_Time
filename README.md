@@ -49,13 +49,13 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 
 ### Scrollable UI Screens
 ### Login Screen
-<img  alt="SBC-NodeMCU-ESP32-C_01" src="01.png">
+<img  alt="SBC-NodeMCU-ESP32-C_01" style="display: flex; justify-content: center; align-items: center;" src="01.png">
 
 ### Details Screen
-<img  alt="SBC-NodeMCU-ESP32-C_01" src="02.png">
+<img  alt="SBC-NodeMCU-ESP32-C_01" style="display: flex; justify-content: center; align-items: center;" src="02.png">
 
 ### Queue Managing Screen
-<img  alt="SBC-NodeMCU-ESP32-C_01" src="03.png">
+<img  alt="SBC-NodeMCU-ESP32-C_01" style="display: flex; justify-content: center; align-items: center;" src="03.png">
 
 ### Interactive Prototype
 [Click here to view the prototype](https://www.figma.com/design/WClz5aN7DWuVeWLIeBFWdM/Medi_Help?node-id=27-341&t=xPMZwsn3gtXQv8y3-1)
