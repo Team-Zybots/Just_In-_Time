@@ -1,91 +1,111 @@
 import 'package:flutter/material.dart';
+import 'services/api_service.dart';
+import 'package:intl/intl.dart';
+import 'globals.dart';
 
-class ApptsScreen extends StatelessWidget {
+class ApptsScreen extends StatefulWidget {
   const ApptsScreen({super.key});
 
-  // UI Colors
+  @override
+  State<ApptsScreen> createState() => _ApptsScreenState();
+}
+
+class _ApptsScreenState extends State<ApptsScreen> {
+  List<dynamic> appointments = [];
+  bool isLoading = true;
+
   static const primaryTeal = Color(0xFF40AFC6);
-  static const backgroundGray = Color(0xFFF8F4F2);
   static const highlightBlue = Color(0xFFE0F7FA);
 
   @override
-  Widget build(BuildContext context) { 
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  Future<void> _loadAppointments() async {
+    if (Globals.currentUser == null) {
+      if (mounted) setState(() => isLoading = false);
+      return;
+    }
+
+    try {
+      final appts = await ApiService.getAppointmentsForPatient(Globals.currentUser!['id']);
+      if (mounted) {
+        setState(() {
+          appointments = appts;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => isLoading = false);
+      debugPrint("Error loading appointments: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        _header(context), // Header with dynamic padding
+        _header(context),
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Upcoming Appointments",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  // Appointment List
-                  const AppointmentCard(
-                    name: "Dr.Wijesekara",
-                    type: "Cardiology Checkup",
-                    date: "Jan 28, 2026",
-                    time: "10:30 AM",
-                    status: "Today",
-                    isHighlighted: true,
-                  ),
-                  const AppointmentCard(
-                    name: "Dr.Rathnayake",
-                    type: "General Consultation",
-                    date: "Feb 5, 2026",
-                    time: "2:00 PM",
-                    status: "Upcoming",
-                  ),
-                  const AppointmentCard(
-                    name: "Dr.Jayaweera",
-                    type: "Eye Examination",
-                    date: "Feb 12, 2026",
-                    time: "11:00 AM",
-                    status: "Upcoming",
-                  ),
+          child: RefreshIndicator(
+            onRefresh: _loadAppointments,
+            color: primaryTeal,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(20),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Upcoming Appointments", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 20),
+                    
+                    if (isLoading)
+                      const Center(child: Padding(padding: EdgeInsets.all(20.0), child: CircularProgressIndicator(color: primaryTeal)))
+                    else if (appointments.isEmpty)
+                      const Center(child: Padding(padding: EdgeInsets.all(20.0), child: Text("No appointments found")))
+                    else
+                      ...appointments.map((appt) {
+                        final dateTime = DateTime.parse(appt['estimatedTime']);
+                        final dateStr = DateFormat('MMM d, yyyy').format(dateTime);
+                        final timeStr = DateFormat('hh:mm a').format(dateTime);
+                        
+                        return AppointmentCard(
+                          name: appt['doctor']['name'] ?? "Unknown Doctor",
+                          type: appt['doctor']['specialization'] ?? "Consultation",
+                          date: dateStr,
+                          time: timeStr,
+                          status: appt['status'] == 'PENDING' ? "Upcoming" : "Today",
+                          isHighlighted: appt['status'] == 'IN_PROGRESS' || appt['status'] == 'PENDING',
+                        );
+                      }),
 
-                  const SizedBox(height: 10),
-
-                  // Updated Action Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      // --- NAVIGATION LOGIC ADDED HERE ---
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/book_appt');
-                      },
-                      // ------------------------------------
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryTeal,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        "Book New Appointment",
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pushNamed(context, '/book_appt'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryTeal,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: const Text("Book New Appointment", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -94,11 +114,8 @@ class ApptsScreen extends StatelessWidget {
     );
   }
 
-  // --- Helper Widgets ---
-
   Widget _header(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
-
     return Container(
       padding: EdgeInsets.only(top: topPadding + 15, left: 20, right: 20, bottom: 25),
       decoration: const BoxDecoration(color: primaryTeal),
@@ -108,14 +125,8 @@ class ApptsScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Text(
-                "Just-In-time",
-                style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Appointments",
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-              ),
+              Text("Just-In-time", style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+              Text("Appointments", style: TextStyle(color: Colors.white70, fontSize: 16)),
             ],
           ),
           Row(
@@ -133,10 +144,7 @@ class ApptsScreen extends StatelessWidget {
   Widget _headerIcon(IconData icon) {
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: Colors.white.withOpacity(0.3), shape: BoxShape.circle),
       child: Icon(icon, color: Colors.white, size: 28),
     );
   }
@@ -162,12 +170,9 @@ class AppointmentCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: isHighlighted ? ApptsScreen.highlightBlue : Colors.white,
+        color: isHighlighted ? const Color(0xFFE0F7FA) : Colors.white,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: isHighlighted ? ApptsScreen.primaryTeal : Colors.grey.shade300,
-          width: 1.5,
-        ),
+        border: Border.all(color: isHighlighted ? const Color(0xFF40AFC6) : Colors.grey.shade300, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
