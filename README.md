@@ -48,7 +48,7 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 ## 🎨 UI Design & Prototype
 
 ### Scrollable UI Screens
-![Home Screen](Screenshot 2026-03-31 031605.png)
+![Home Screen](01.png)
 ![Details Screen](designs/week1/home_02.png)
 
 
