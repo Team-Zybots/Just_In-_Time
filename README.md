@@ -57,6 +57,49 @@ Make sure you have the following installed:
   * Arduino IDE (for ESP32)
   * ESP32 Board Drivers installed
 ---
+## ⚙️ 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-repo/just-in-time.git
+cd just-in-time
+```
+
+## 🔧 2. Run Backend (Spring Boot)
+
+Navigate to backend:
+```bash
+cd backend
+```
+Run the application:
+
+Using Maven:
+mvn spring-boot:run
+
+## 📱 3. Run Frontend (Flutter)
+
+Navigate to frontend:
+
+cd ../frontend
+
+Install dependencies:
+
+flutter pub get
+
+Update API Base URL (VERY IMPORTANT ⚠️)
+
+In your Flutter project (usually inside a config file):
+
+const String BASE_URL = "http://10.0.2.2:8080"; // Android Emulator
+
+For real device:
+
+const String BASE_URL = "http://YOUR_PC_IP:8080";
+
+Run the app:
+
+flutter run
+
+---
 
 ## 🎨 UI Design & Prototype
 
