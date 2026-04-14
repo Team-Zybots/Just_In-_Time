@@ -16,6 +16,7 @@ import 'clinic_screen.dart';
 import 'notification_screen.dart';
 import 'notification_settings_page.dart';
 import 'book_new_appt.dart'; // ADDED
+import 'payment_page.dart'; // ADDED
 
 // --- USER & LEGAL ---
 import 'settings_page.dart';
@@ -62,6 +63,7 @@ class JustInTimeApp extends StatelessWidget {
         '/privacy': (context) => const PrivacyPolicyPage(),
         '/help': (context) => const HelpSupportPage(),
         '/book_appt': (context) => const BookAppointmentPage(), // ADDED
+        '/payment': (context) => const PaymentPage(), // ADDED
       },
     );
   }
@@ -80,7 +82,7 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     // Pages indexed 0-3 are on the BottomNav. 4-5 are sub-pages of Home.
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       HomeScreen(onNavigate: (index) => setState(() => _currentIndex = index)),
       const QueueScreen(),
       const ApptsScreen(),
@@ -97,7 +99,7 @@ class _MainNavigationState extends State<MainNavigation> {
         if (_currentIndex != 0) setState(() => _currentIndex = 0); 
       },
       child: Scaffold(
-        body: _pages[_currentIndex], 
+        body: pages[_currentIndex], 
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex > 3 ? 0 : _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
