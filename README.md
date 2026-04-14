@@ -61,7 +61,7 @@ Make sure you have the following installed:
 
 ```bash
 git clone https://github.com/your-repo/just-in-time.git](https://github.com/Team-Zybots/Just_In-_Time
-cd just-in-time
+cd Just_In-_Time
 ```
 
 ## 🔧 2. Run Backend (Spring Boot)
