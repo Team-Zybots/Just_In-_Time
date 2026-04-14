@@ -60,7 +60,7 @@ Make sure you have the following installed:
 ## ⚙️ 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/just-in-time.git
+git clone https://github.com/your-repo/just-in-time.git](https://github.com/Team-Zybots/Just_In-_Time
 cd just-in-time
 ```
 
