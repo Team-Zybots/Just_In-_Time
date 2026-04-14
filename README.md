@@ -46,18 +46,14 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 
 Make sure you have the following installed:
 
-  Java 17+
-  Maven or Gradle
-  Flutter SDK (latest stable)
-  Android Studio / VS Code
-  MySQL or PostgreSQL
-  Git
-  Arduino IDE (for ESP32)
-  ESP32 Board Drivers installed
-
-  ⚙️ 1. Clone the Repository
-  git clone https://github.com/your-repo/just-in-time.git
-  cd just-in-time
+  * Java 17+
+  * Maven or Gradle
+  * Flutter SDK (latest stable)
+  * Android Studio / VS Code
+  * MySQL or PostgreSQL
+  * Git
+  * Arduino IDE (for ESP32)
+  * ESP32 Board Drivers installed
 ---
 
 ## 🎨 UI Design & Prototype
