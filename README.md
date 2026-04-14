@@ -42,7 +42,9 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
   ├── /docs           # OOSD reports, UML diagrams, NFR tables
   └── /designs        # UI assets and design exports
 ```
-🧰 Prerequisites
+---
+
+##🧰 Prerequisites
 
 Make sure you have the following installed:
 
