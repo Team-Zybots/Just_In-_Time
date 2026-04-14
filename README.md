@@ -44,7 +44,7 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 ```
 ---
 
-##🧰 Prerequisites
+## 🧰 Prerequisites
 
 Make sure you have the following installed:
 
