@@ -70,7 +70,7 @@ Navigate to backend:
 ```bash
 cd backend
 ```
-Run the application:
+### Run the application:
 
 Using Maven:
 ```bash
