@@ -73,32 +73,25 @@ cd backend
 Run the application:
 
 Using Maven:
+```bash
 mvn spring-boot:run
-
+```
 ## 📱 3. Run Frontend (Flutter)
 
 Navigate to frontend:
-
+```bash
 cd ../frontend
-
+```
 Install dependencies:
-
+```bash
 flutter pub get
+```
 
-Update API Base URL (VERY IMPORTANT ⚠️)
-
-In your Flutter project (usually inside a config file):
-
-const String BASE_URL = "http://10.0.2.2:8080"; // Android Emulator
-
-For real device:
-
-const String BASE_URL = "http://YOUR_PC_IP:8080";
 
 Run the app:
-
+```bash
 flutter run
-
+```
 ---
 
 ## 🎨 UI Design & Prototype
