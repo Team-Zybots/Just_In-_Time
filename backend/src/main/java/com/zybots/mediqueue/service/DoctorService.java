@@ -1,6 +1,7 @@
 package com.zybots.mediqueue.service;
 
 import com.zybots.mediqueue.model.Doctor;
+import com.zybots.mediqueue.model.Role; // ✅ IMPORTANT FIX
 import com.zybots.mediqueue.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class DoctorService {
 
     // CREATE
     public Doctor registerDoctor(Doctor doctor) {
+        doctor.setRole(Role.DOCTOR); // ✅ SET ROLE HERE
         return doctorRepository.save(doctor);
     }
 

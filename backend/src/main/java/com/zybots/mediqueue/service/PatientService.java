@@ -1,6 +1,7 @@
 package com.zybots.mediqueue.service;
 
 import com.zybots.mediqueue.model.Patient;
+import com.zybots.mediqueue.model.Role; // ✅ IMPORTANT
 import com.zybots.mediqueue.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class PatientService {
 
     // 1. CREATE
     public Patient registerPatient(Patient patient) {
+        // ✅ FIX: Set role before saving (prevents 500 error)
+        patient.setRole(Role.PATIENT);
         return patientRepository.save(patient);
     }
 
@@ -29,14 +32,17 @@ public class PatientService {
         return patientRepository.findById(id);
     }
 
-    // 4. UPDATE (Logic: Check if exists, then update allowed fields)
+    // 4. UPDATE
     public Patient updatePatient(Long id, Patient updatedDetails) {
         return patientRepository.findById(id).map(existingPatient -> {
+
             existingPatient.setName(updatedDetails.getName());
             existingPatient.setPhone(updatedDetails.getPhone());
             existingPatient.setMedicalHistory(updatedDetails.getMedicalHistory());
-            // Note: We usually don't let users update their own email/password directly here without extra security checks
+
+            // ⚠️ DO NOT overwrite role/email/password here
             return patientRepository.save(existingPatient);
+
         }).orElseThrow(() -> new RuntimeException("Patient with ID " + id + " not found!"));
     }
 
