@@ -8,11 +8,9 @@ class NavigationScreen extends StatelessWidget {
 
   // FUNCTION: Logic to open Google Maps
   Future<void> _openGoogleMaps() async {
-    // Coordinates for Matara, Sri Lanka (Example)
-    const double latitude = 5.9549;
-    const double longitude = 80.5550;
-    final Uri googleMapsUrl = Uri.parse("google.navigation:q=$latitude,$longitude&mode=d");
-    final Uri appleMapsUrl = Uri.parse("https://maps.apple.com/?q=$latitude,$longitude");
+    // Dynamic query for nearest hospital
+    final Uri googleMapsUrl = Uri.parse("geo:0,0?q=hospital");
+    final Uri appleMapsUrl = Uri.parse("https://maps.apple.com/?q=hospital");
 
     try {
       if (await canLaunchUrl(googleMapsUrl)) {
@@ -66,17 +64,9 @@ class NavigationScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Health Care Plus Clinic", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  const Text("No. 123, Galle Road, Matara, Sri Lanka", style: TextStyle(color: Colors.grey)),
+                  const Text("Locate Nearest Hospital", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const Text("Find emergency and healthcare facilities near your current position.", style: TextStyle(color: Colors.grey)),
                   const Divider(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _infoColumn("Distance", "2.4 km"),
-                      _infoColumn("Time", "12 mins"),
-                      _infoColumn("Traffic", "Low"),
-                    ],
-                  ),
                   const Spacer(),
                   SizedBox(
                     width: double.infinity,
@@ -100,13 +90,5 @@ class NavigationScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoColumn(String label, String value) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      ],
-    );
-  }
+
 }
