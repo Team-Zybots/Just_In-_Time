@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:admin_web_dashboard/screens/manage_doctors_screen.dart';
-import 'package:admin_web_dashboard/screens/live_queue_screen.dart';
-import 'package:admin_web_dashboard/screens/payments_screen.dart';
 
 void main() {
   runApp(const AdminDashboardApp());
@@ -42,9 +39,7 @@ class _AdminShellState extends State<AdminShell> {
 
   // These are the screens the admin can switch between
   final List<Widget> _screens = [
-    const LiveQueueScreen(),
-    const ManageDoctorsScreen(),
-    const PaymentsScreen(),
+    //
   ];
 
   @override
