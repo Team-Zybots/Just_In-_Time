@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*") // ADDED
 @RequestMapping("/api/appointments")
 public class AppointmentController {
 
@@ -17,7 +18,6 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
-    // ✅ UPDATED
     @PostMapping("/book")
     public Appointment bookAppointment(@RequestBody AppointmentRequest request) {
         return appointmentService.bookAppointment(request);
