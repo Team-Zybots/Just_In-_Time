@@ -25,8 +25,6 @@ class _PaymentPageState extends State<PaymentPage> {
 
     setState(() => _isProcessing = true);
 
-    // FIXED: removed artificial 2-second delay that was slowing every booking
-
     try {
       final response = await ApiService.bookAppointment(bookingData);
 
@@ -55,8 +53,19 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> bookingData =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // ✅ FIX: was  ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
+    // which crashes with a null cast if arguments are missing (e.g. hot reload,
+    // unexpected navigation). Now safely guarded — pops back instead of crashing.
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args == null || args is! Map<String, dynamic>) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.pop(context);
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    final Map<String, dynamic> bookingData = args;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -82,8 +91,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     color: Color(0xFF06B6D4))),
             const SizedBox(height: 40),
             const Text("Card details",
-                style:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 15),
             _buildInput("Card Number", Icons.credit_card, _cardController,
                 TextInputType.number),
