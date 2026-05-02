@@ -129,13 +129,7 @@ class _ApptsScreenState extends State<ApptsScreen> {
               Text("Appointments", style: TextStyle(color: Colors.white70, fontSize: 16)),
             ],
           ),
-          Row(
-            children: [
-              _headerIcon(Icons.notifications_none),
-              const SizedBox(width: 10),
-              _headerIcon(Icons.menu),
-            ],
-          )
+          
         ],
       ),
     );
