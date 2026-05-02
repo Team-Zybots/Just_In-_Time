@@ -22,7 +22,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
 
   Future<void> _loadQueue() async {
     try {
-      final q = await ApiService.getQueueForDoctor(widget.doctor['id']);
+      // FIXED: .toString() so docId is passed as String, not int
+      final q = await ApiService.getQueueForDoctor(widget.doctor['id'].toString());
       if (mounted) {
         setState(() {
           queue = q;
@@ -80,8 +81,6 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     );
   }
 
-  // --- UI Components ---
-
   Widget _cardWrapper({String? title, IconData? icon, required Widget child}) {
     return Container(
       width: double.infinity,
@@ -113,18 +112,28 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               CircleAvatar(
                 radius: 30,
                 backgroundColor: const Color(0xFF00BCD4),
-                child: Text(widget.doctor['name'] != null && widget.doctor['name'].length > 3 ? widget.doctor['name'][3] : 'D', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text(
+                  widget.doctor['name'] != null && widget.doctor['name'].length > 3
+                      ? widget.doctor['name'][3]
+                      : 'D',
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(width: 15),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.doctor['name'] ?? 'Dr. Unknown', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text(widget.doctor['specialization'] ?? 'Specialist', style: const TextStyle(color: Colors.grey)),
+                  Text(widget.doctor['name'] ?? 'Dr. Unknown',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(widget.doctor['specialization'] ?? 'Specialist',
+                      style: const TextStyle(color: Colors.grey)),
                   const SizedBox(height: 4),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    decoration: BoxDecoration(color: status.toUpperCase() == "ACTIVE" ? Colors.greenAccent : Colors.orangeAccent, borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(
+                      color: status.toUpperCase() == "ACTIVE" ? Colors.greenAccent : Colors.orangeAccent,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                     child: Text(status, style: const TextStyle(color: Colors.white, fontSize: 10)),
                   ),
                 ],
@@ -166,7 +175,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         children: [
           _statusTile('Active', Colors.green, currentStatus.toUpperCase() == 'ACTIVE'),
           _statusTile('On Break', Colors.orange, currentStatus.toUpperCase() == 'ON BREAK'),
-          _statusTile('Emergency/Away', Colors.amber, currentStatus.toUpperCase() == 'EMERGENCY' || currentStatus.toUpperCase() == 'AWAY'),
+          _statusTile('Emergency/Away', Colors.amber,
+              currentStatus.toUpperCase() == 'EMERGENCY' || currentStatus.toUpperCase() == 'AWAY'),
         ],
       ),
     );
