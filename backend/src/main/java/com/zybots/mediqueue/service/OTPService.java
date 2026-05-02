@@ -8,52 +8,59 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class OTPService {
 
-    // Store OTP in memory. Key: Email, Value: generated OTP
-    private final ConcurrentHashMap<String, String> otpStorage = new ConcurrentHashMap<>();
+    // FIXED: store OTP alongside its expiry timestamp (5 minutes)
+    // long[0] = OTP value, long[1] = expiry epoch milliseconds
+    private final ConcurrentHashMap<String, long[]> otpStorage = new ConcurrentHashMap<>();
 
     @Autowired
     private org.springframework.mail.javamail.JavaMailSender mailSender;
 
-    /**
-     * Generates a 4-digit OTP, stores it for the given email,
-     * and sends it via real email.
-     */
     public void generateAndSendOTP(String email) {
         String otp = String.format("%04d", new Random().nextInt(10000));
-        otpStorage.put(email, otp);
+        long expiry = System.currentTimeMillis() + (5 * 60 * 1000); // 5 minutes
+        otpStorage.put(email, new long[]{Long.parseLong(otp), expiry});
+
         System.out.println("Generated OTP: " + otp + " for email: " + email);
-        
+
         try {
-            org.springframework.mail.SimpleMailMessage message = new org.springframework.mail.SimpleMailMessage();
+            org.springframework.mail.SimpleMailMessage message =
+                    new org.springframework.mail.SimpleMailMessage();
             message.setTo(email);
             message.setSubject("Your Mediqueue OTP");
-            message.setText("Your verification code is: " + otp);
+            message.setText("Your verification code is: " + otp + "\n\nThis code expires in 5 minutes.");
             mailSender.send(message);
             System.out.println("SUCCESS: JavaMailSender sent OTP to " + email);
         } catch (Exception e) {
             System.err.println("CRITICAL ERROR: Failed to send email to " + email);
             System.err.println("Error details: " + e.getMessage());
             e.printStackTrace();
-            // Still log OTP locally so user can find it in their Railway logs
             System.out.println("[FALLBACK LOG] Since email failed, use this OTP to test: " + otp);
         }
     }
 
-    /**
-     * Verifies if the provided OTP matches the stored OTP for the email.
-     * Also allows '1111' as a bypass code for presentation testing.
-     */
     public boolean verifyOTP(String email, String otp) {
-        // BYPASS: Use 1111 if your real email is delayed!
+        // Bypass for dev/presentation testing
         if (otp.equals("1111")) {
             System.out.println("Using Bypass code '1111' for email: " + email);
             return true;
         }
 
-        if (otpStorage.containsKey(email) && otpStorage.get(email).equals(otp)) {
+        long[] stored = otpStorage.get(email);
+        if (stored == null) return false;
+
+        // FIXED: check expiry before accepting OTP
+        if (System.currentTimeMillis() > stored[1]) {
+            otpStorage.remove(email);
+            System.out.println("OTP expired for: " + email);
+            return false;
+        }
+
+        String storedOtp = String.format("%04d", (long) stored[0]);
+        if (storedOtp.equals(otp)) {
             otpStorage.remove(email);
             return true;
         }
+
         return false;
     }
 }
