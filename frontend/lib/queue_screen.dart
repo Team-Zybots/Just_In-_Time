@@ -136,26 +136,12 @@ class _QueueScreenState extends State<QueueScreen> {
               Text("Live Queue", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)),
             ],
           ),
-          Row(
-            children: [
-              _buildHeaderCircleButton(Icons.notifications_none),
-              const SizedBox(width: 12),
-              _buildHeaderCircleButton(Icons.menu),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildHeaderCircleButton(IconData icon) {
-    return Container(
-      width: 45, height: 45,
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle),
-      child: Icon(icon, color: Colors.white, size: 24),
-    );
-  }
-
+  
   Widget _buildProgressCard(dynamic inProgress, dynamic myAppt) {
     String nowTreating = inProgress != null ? "Token #${inProgress['tokenNumber']}" : "None";
     String yourToken = "Your Token #${myAppt['tokenNumber']}";
