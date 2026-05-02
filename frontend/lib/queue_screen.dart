@@ -15,7 +15,7 @@ class _QueueScreenState extends State<QueueScreen> {
   Map<String, dynamic>? activeAppt;
   bool isLoading = true;
 
-  Timer? _refreshTimer; // ADDED: auto-refresh
+  Timer? _refreshTimer; // ADDED: auto-refresh timer
 
   @override
   void initState() {

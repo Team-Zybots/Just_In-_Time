@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   Map<String, dynamic>? doctorInfo;
   List<dynamic> queue = [];
   Map<String, dynamic>? activeAppt;
@@ -32,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final patientAppts = await ApiService.getAppointmentsForPatient(Globals.currentUser!['id']);
-      // Find the first pending appointment
       final pendingAppts = patientAppts.where((a) => a['status'] == 'PENDING').toList();
 
       if (pendingAppts.isNotEmpty) {
         final currentAppt = pendingAppts.first;
-        final docId = currentAppt['doctor']['id'];
+        // FIXED: .toString() so docId is passed as String, not int
+        final docId = currentAppt['doctor']['id'].toString();
 
         final doc = await ApiService.getDoctorById(docId);
         final q = await ApiService.getQueueForDoctor(docId);
@@ -80,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (activeAppt != null && queue.isNotEmpty) {
       int myToken = activeAppt!['tokenNumber'] ?? 999;
       aheadCount = queue.where((a) => a['status'] == 'PENDING' && a['tokenNumber'] < myToken).length;
-      waitTime = aheadCount * 8; // Assuming 8 mins per patient
-      
+      waitTime = aheadCount * 8;
+
       final currentAppt = queue.firstWhere((a) => a['status'] == 'IN_PROGRESS', orElse: () => null);
       nowTreating = currentAppt != null ? "#${currentAppt['tokenNumber']}" : "None";
       yourToken = "#$myToken";
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isLate = activeAppt != null && waitTime <= 5;
 
     return Scaffold(
-      key: _scaffoldKey, 
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       endDrawer: _buildDrawer(context),
       body: RefreshIndicator(
@@ -140,16 +140,18 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100, 
-        borderRadius: BorderRadius.circular(25), 
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Column(
         children: [
           const Icon(Icons.calendar_today, size: 60, color: Colors.grey),
           const SizedBox(height: 15),
-          const Text("No Active Appointments", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54)),
+          const Text("No Active Appointments",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54)),
           const SizedBox(height: 10),
-          const Text("You are not in any queue right now. Book an appointment to get started.", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+          const Text("You are not in any queue right now. Book an appointment to get started.",
+              textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => Navigator.pushNamed(context, '/book_appt'),
@@ -157,11 +159,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text("Book Now", style: TextStyle(color: Colors.white)),
           )
         ],
-      )
+      ),
     );
   }
 
-  // --- FIXED DRAWER LOGIC ---
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -173,25 +174,27 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                 Text(Globals.currentUser?['name'] ?? "Guest User", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                 Text(Globals.currentUser?['email'] ?? "Please log in", style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                Text(Globals.currentUser?['name'] ?? "Guest User",
+                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(Globals.currentUser?['email'] ?? "Please log in",
+                    style: const TextStyle(color: Colors.white70, fontSize: 14)),
               ],
-            )
+            ),
           ),
           ListTile(
-            leading: const Icon(Icons.person_outline), 
-            title: const Text("Profile"), 
+            leading: const Icon(Icons.person_outline),
+            title: const Text("Profile"),
             onTap: () {
-              Navigator.pop(context); // Close drawer
-              Navigator.pushNamed(context, '/profile'); 
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/profile');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.settings_outlined), 
-            title: const Text("Settings"), 
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text("Settings"),
             onTap: () {
-              Navigator.pop(context); // Close drawer
-              Navigator.pushNamed(context, '/settings'); 
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings');
             },
           ),
           const Divider(),
@@ -201,14 +204,13 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Globals.clear();
               Navigator.pushReplacementNamed(context, '/login');
-            }
+            },
           ),
         ],
       ),
     );
   }
 
-  // --- UI COMPONENTS ---
   Widget _buildInteractiveHeader(BuildContext context) {
     return Container(
       height: 168,
@@ -223,7 +225,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Hi ${Globals.currentUser?['name'] ?? ''}", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                Text("Hi ${Globals.currentUser?['name'] ?? ''}",
+                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis),
                 const Text("Live Dashboard", style: TextStyle(color: Colors.white, fontSize: 16)),
               ],
             ),
@@ -278,9 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF13B9CE), 
-        borderRadius: BorderRadius.circular(25), 
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)]
+        color: const Color(0xFF13B9CE),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -288,8 +292,10 @@ class _HomeScreenState extends State<HomeScreen> {
           _activeBadge(doctorInfo?['currentStatus'] ?? "Active"),
         ]),
         const SizedBox(height: 15),
-        Text(doctorInfo?['name'] ?? "No Doctor", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-        Text(doctorInfo?['specialization'] ?? "Specialist", style: const TextStyle(color: Colors.white70)),
+        Text(doctorInfo?['name'] ?? "No Doctor",
+            style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(doctorInfo?['specialization'] ?? "Specialist",
+            style: const TextStyle(color: Colors.white70)),
         const SizedBox(height: 20),
         Row(children: [
           Expanded(child: _tokenSubBox("Now Treating", nowTreating)),
@@ -308,8 +314,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _activeBadge(String status) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-    decoration: BoxDecoration(color: status == "Active" ? Colors.green : Colors.orange, borderRadius: BorderRadius.circular(20)),
-    child: Text("~ $status", style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+    decoration: BoxDecoration(
+      color: status == "Active" ? Colors.green : Colors.orange,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Text("~ $status",
+        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
   );
 
   Widget _buildETASection(bool isLate, int waitTime, int aheadCount) {
@@ -323,11 +333,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Column(children: [
         Row(children: [
-          CircleAvatar(backgroundColor: statusColor, radius: 15, child: const Icon(Icons.near_me, color: Colors.white, size: 15)),
+          CircleAvatar(
+              backgroundColor: statusColor,
+              radius: 15,
+              child: const Icon(Icons.near_me, color: Colors.white, size: 15)),
           const SizedBox(width: 10),
-          const Text("Estimated Wait Time", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const Text("Estimated Wait Time",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ]),
-        if (isLate) 
+        if (isLate)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
@@ -335,7 +349,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Icon(Icons.error_outline, color: Colors.red, size: 16),
                 const SizedBox(width: 5),
-                Text("You may miss your turn!", style: TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text("You may miss your turn!",
+                    style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12)),
               ],
             ),
           ),
@@ -352,8 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(10)),
     child: Column(children: [
-      Text(t, style: const TextStyle(color: Colors.white70, fontSize: 10)), 
-      Text(v, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
+      Text(t, style: const TextStyle(color: Colors.white70, fontSize: 10)),
+      Text(v, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
     ]),
   );
 
@@ -364,12 +382,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ]);
 
   Widget _statCard(IconData icon, String val, String sub) => Container(
-    width: 100, padding: const EdgeInsets.all(15),
-    decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(20)),
+    width: 100,
+    padding: const EdgeInsets.all(15),
+    decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(20)),
     child: Column(children: [
-      Icon(icon, color: const Color(0xFF06B6D4)), 
+      Icon(icon, color: const Color(0xFF06B6D4)),
       const SizedBox(height: 5),
-      Text(val, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), 
+      Text(val, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       Text(sub, style: const TextStyle(fontSize: 10, color: Colors.grey)),
     ]),
   );
@@ -379,7 +400,9 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap,
       child: Container(
         height: 100,
-        decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(20)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: const Color(0xFF06B6D4)),
           const SizedBox(height: 8),
