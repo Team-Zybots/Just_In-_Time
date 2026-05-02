@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'services/api_service.dart';
 import 'globals.dart';
@@ -14,13 +15,25 @@ class _QueueScreenState extends State<QueueScreen> {
   Map<String, dynamic>? activeAppt;
   bool isLoading = true;
 
+  Timer? _refreshTimer; // ADDED: auto-refresh
+
   @override
   void initState() {
     super.initState();
     _loadQueue();
+    // ADDED: poll every 15 seconds for live queue updates
+    _refreshTimer = Timer.periodic(const Duration(seconds: 15), (_) {
+      if (mounted) _loadQueue(silent: true);
+    });
   }
 
-  Future<void> _loadQueue() async {
+  @override
+  void dispose() {
+    _refreshTimer?.cancel(); // ADDED: cancel timer on dispose
+    super.dispose();
+  }
+
+  Future<void> _loadQueue({bool silent = false}) async {
     if (Globals.currentUser == null) {
       if (mounted) setState(() => isLoading = false);
       return;
@@ -32,7 +45,7 @@ class _QueueScreenState extends State<QueueScreen> {
 
       if (pendingAppts.isNotEmpty) {
         final currentAppt = pendingAppts.first;
-        final docId = currentAppt['doctor']['id'];
+        final docId = currentAppt['doctor']['id'].toString(); // FIXED: .toString()
         final q = await ApiService.getQueueForDoctor(docId);
 
         if (mounted) {
@@ -52,7 +65,8 @@ class _QueueScreenState extends State<QueueScreen> {
         }
       }
     } catch (e) {
-      if (mounted) setState(() => isLoading = false);
+      // FIXED: silent background refresh won't flash the loading spinner
+      if (mounted && !silent) setState(() => isLoading = false);
       debugPrint("Error loading queue: $e");
     }
   }
@@ -83,10 +97,10 @@ class _QueueScreenState extends State<QueueScreen> {
 
     int myToken = activeAppt!['tokenNumber'] ?? 999;
     final inProgress = queue.firstWhere((a) => a['status'] == 'IN_PROGRESS', orElse: () => null);
-    
+
     int aheadCount = queue.where((a) => a['status'] == 'PENDING' && a['tokenNumber'] < myToken).length;
-    int estimatedWait = aheadCount * 8; 
-    
+    int estimatedWait = aheadCount * 8;
+
     bool isUrgent = estimatedWait < 5 && estimatedWait >= 0;
     Color alertColor = isUrgent ? const Color(0xFFEF4444) : const Color(0xFF22C55E);
     Color alertBg = isUrgent ? const Color(0xFFFEF2F2) : const Color(0xFFF0FDF4);
@@ -159,10 +173,10 @@ class _QueueScreenState extends State<QueueScreen> {
   Widget _buildProgressCard(dynamic inProgress, dynamic myAppt) {
     String nowTreating = inProgress != null ? "Token #${inProgress['tokenNumber']}" : "None";
     String yourToken = "Your Token #${myAppt['tokenNumber']}";
-    
+
     int myTokenNum = myAppt['tokenNumber'] ?? 100;
     int currentTokenNum = inProgress != null ? inProgress['tokenNumber'] ?? 0 : 0;
-    
+
     double progress = 0.0;
     if (myTokenNum > 0) {
       progress = currentTokenNum / myTokenNum;
@@ -299,20 +313,20 @@ class _QueueScreenState extends State<QueueScreen> {
             elevation: 0,
             color: isMe ? const Color(0xFFF0FDF4) : Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15), 
+              borderRadius: BorderRadius.circular(15),
               side: BorderSide(color: isMe ? const Color(0xFF22C55E) : Colors.grey.shade200)
             ),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: item['status'] == 'IN_PROGRESS' 
-                    ? Colors.green 
+                backgroundColor: item['status'] == 'IN_PROGRESS'
+                    ? Colors.green
                     : (isMe ? const Color(0xFF22C55E) : Colors.grey.shade200),
                 child: Text("${item['tokenNumber']}", style: TextStyle(color: (item['status'] == 'IN_PROGRESS' || isMe) ? Colors.white : Colors.black)),
               ),
               title: Text(item['patient']['name'] ?? "Unknown Patient"),
               subtitle: Text("Status: ${item['status']}"),
-              trailing: item['status'] == 'IN_PROGRESS' 
-                  ? const Icon(Icons.play_circle_fill, color: Colors.green) 
+              trailing: item['status'] == 'IN_PROGRESS'
+                  ? const Icon(Icons.play_circle_fill, color: Colors.green)
                   : (isMe ? const Icon(Icons.person, color: Color(0xFF22C55E)) : null),
             ),
           );
