@@ -9,25 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*") // ADDED
 @RequestMapping("/api/doctors")
 public class DoctorController {
 
     @Autowired
     private DoctorService doctorService;
 
-    // CREATE: POST http://localhost:8081/api/doctors/register
     @PostMapping("/register")
     public ResponseEntity<Doctor> registerDoctor(@RequestBody Doctor doctor) {
         return ResponseEntity.ok(doctorService.registerDoctor(doctor));
     }
 
-    // READ ALL: GET http://localhost:8081/api/doctors/all
     @GetMapping("/all")
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
-    // READ ONE: GET http://localhost:8081/api/doctors/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
         return doctorService.getDoctorById(id)
@@ -35,7 +33,6 @@ public class DoctorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE: PUT http://localhost:8081/api/doctors/{id}
     @PutMapping("/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor updatedDetails) {
         try {
@@ -45,7 +42,6 @@ public class DoctorController {
         }
     }
 
-    // DELETE: DELETE http://localhost:8081/api/doctors/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDoctor(@PathVariable Long id) {
         try {
